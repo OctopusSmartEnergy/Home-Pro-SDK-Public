@@ -56,20 +56,21 @@ is as follows:
 To verify access to the SDK container use secure shell (ssh). The following configuration can be used to ease out subsequent connections to the container.
 
 ````
-Host hpro
-HostName <HPRO-IP>
-User root
-Port 8023
-IdentityFile ~/.ssh/id_rsa
-IdentitiesOnly yes
-HostKeyAlgorithms=+ssh-rsa
-PubkeyAcceptedAlgorithms=+ssh-rsa
+Host hpro-sdk
+  HostName <HPRO-IP>
+  User root
+  Port 8023
+  HostKeyAlgorithms=+ssh-rsa
+  PubkeyAcceptedAlgorithms=+ssh-rsa
 ````
 
-Then from command line
+The above settings shall be put in ssh configuration file of your host laptop/computer which, on Unix
+hosts, is usually found at: `${HOME}/.ssh/config`.
+Use one of your favorite text editors to create the configuration if it does not exist already. Then from
+command line, run
 
 ````
-ssh hpro
+ssh hpro-sdk
 ````
 
 OR if you haven't created an ssh configuration as stated above, use the following command
@@ -109,11 +110,13 @@ To connect to the code base with VS Code follow these steps.
 ssh -p 8023 -o HostKeyAlgorithms=+ssh-rsa root@<HPRO-IP>
 ```
 
-where \<HPRO-IP\> should be replaced with the IP address of your Home Pro retrieved in the _**Connecting to the Internet**_ section earlier in this guide.
+where \<HPRO-IP\> should be replaced with the IP address of your Home Pro retrieved in the
+[Connecting to the Internet](#connecting-to-the-internet) section earlier in this guide.
 
 ![connect](assets/connect.png)
 
-The first time an ssh connection is made to the Home Pro it will take a couple of minutes as the VS Server is downloaded to the Home Pro container for subsequent use.
+The first time an ssh connection is made to the Home Pro it will take a couple of minutes as the VSCode
+SSH Server is downloaded to the Home Pro container for subsequent use.
 
 When prompted use the password 'cad_dev' as before. 
 
@@ -127,7 +130,8 @@ Octave_GPIO/
 Octave_SPI/
 ```
 
-The startup.sh is a script that is run at container launch while the Octave_* are directories for APIs of the different interfaces. These are explained later.
+The startup.sh is a script that is run at container launch while the Octave_* are directories for APIs of
+the different interfaces. These are explained later.
 
 ##  40 Pin Header
 
@@ -171,10 +175,8 @@ Octave_GPIO.py contains the class that controls access to the GPIO RESTful API. 
 
 flash-led.py is a simple python script that is called at start up and will be running constantly.
 
-If an LED is placed across pin 5 and ground as shown below it will flash every second. 
-
-This is a clear indication that the docker container is running and SDK is accessible.
-
+If an LED is placed across pin 5 and ground as shown below it will flash every second. This is a clear
+indication that the docker container is running and SDK is accessible.
 For reference, from the 4 pin jumper only 2 wires are needed.
 
 ![flash](assets/flash.gif)
@@ -185,42 +187,62 @@ To change and re-run the script, make sure to stop the invocation that runs at s
 ps -ef | grep flash-led.py
 ```
 
-To stop the script from being run at startup, edit the startup.sh file in base root directory.
+you can then use the `kill` command with this PID. To run the example application again, use
 
-**_Be careful editing the startup script as this also enables ssh connection, if corrupted it could render the SDK container inaccessible._**
+```
+cd /root/Octave_GPIO
+python3 flash-led.py
+```
 
-If this does happen you will need to do a factory reset. This will download the original container again so any work you have done will be lost.
+This second/modified run can be stopped using the `Ctrl+C` key combination.
+To stop the script from being run at SDK startup every time, edit the startup.sh file in base root directory. Use nano from a terminal based
+ssh session or ideally the remote file explorer VSCode component for this.
 
-flash_led_read-button.py is a variation of flash-led.py.
+**_Be careful editing the startup script as this also enables ssh connection, if corrupted it could
+render the SDK container inaccessible. See the [Container Startup Script](#container-startup-script)
+section for details before trying to edit._**
 
 ### Octave_I2C
 
 This directory within the container has files that help access the I2C buses on the 40 pin header. There are 2 buses available.
 
-The mpu6050_ctl.py example script communicates with the GY-521 module which is based on the MPU6050 sensor.
+The mpu6050_ctl.py example script communicates with the GY-521 module which is based on the MPU6050
+sensor.
 
 ![MPU6050](assets/mpu6050_connection.jpeg)
+
+The example can be started as follows
+
+```
+cd /root/Octave_I2C
+python3 mpu6050_ctl.py
+```
 
 Below is the readout of the module from the 37 sensor package that is connected on I2C bus 1 as depicted in the picture above.
 
 ![gyro](assets/gyro.png)
 
-The example app keeps on reading the sensor unless stopped with a Ctrl+C key combination. The figure below shows the I2C clock and data
-bus for the sensor on a picoscope.
+The example app keeps on reading the sensor unless stopped with a `Ctrl+C` key combination. The figure
+below shows the I2C clock and data bus for the sensor on a picoscope.
 
 ![i2c](assets/i2c.gif)
 
-The i2c-detect.py is a program that detects all i2c devices on a bus. This can also be achieved using command line calls to the built in i2c utility.
+The i2c-detect.py is a program that detects all i2c devices on a bus. This can also be achieved using
+command line calls to the built in i2c utility.
 
 ![i2c-detect](assets/i2c-detect.png)
 
-ds1037.py access a realtime clock. Although communication was valid, it was not fully functional at time of initial release.
+ds1037.py access a realtime clock. Although communication was valid, it was not fully functional at time
+of initial release.
 
-_**Note:**_ some devices require 5V to function properly. The Grove HAT only supplies 3V3. If the device in use requires 5V then connect the device on the main Home Pro header and not on the Grove HAT connectors. See pinout diagram in previous sections.
+_**Note:**_ some devices require 5V to function properly. The Grove HAT only supplies 3V3. If the device
+in use requires 5V then connect the device on the main Home Pro header and not on the Grove HAT
+connectors. See pinout diagram in previous sections.
 
 ### Octave_PWM
 
-This directory supplies example apps that access the PWM ports on the 40 pin header. Note the Grove HAT only supports 1 PWM.
+This directory supplies example apps that access the PWM ports on the 40 pin header. Note the Grove
+HAT only supports 1 PWM.
 
 The file Octave_PWM.py is the class that controls access to the RESTful API that accesses the port.
 
@@ -228,7 +250,14 @@ The example script pwm.py drives the PWM output. Connect the passive buzzer from
 
 ![speaker](assets/speaker.png)
 
-The speaker was attached on the main Home Pro header as it required 5V not 3V3. It was connected to pins 4, 6 and 12. See pinout in 40 pin header section.
+The speaker was attached on the main Home Pro header as it required 5V not 3V3. It was connected to pins
+4, 6 and 12. See pinout in [40 Pin Header](#40-pin-header) section. The example application can be started
+as follows
+
+```
+cd /root/Octave_PWM
+python3 pwm.py
+```
 
 The image below shows the picoscope capture of the signal.
 
@@ -257,7 +286,7 @@ Once setup properly the demo can be launched as follows after ssh to the Home
 Pro's docker SDK.
 
 ```
-cd Octave_SPI
+cd /root/Octave_SPI
 python3 scrolling-text.py
 ```
 
@@ -270,7 +299,7 @@ A user can edit the startup script (startup.sh) to change what is started at con
 _**WARNING: Do not remove the start up of the sshd server else you will not be able to access the SDK on next boot.**_
 
 If this does happen you will need to do a [factory reset](#factory-reset). This will download the original container again so any work you have done will be lost if not backed up earlier.
-There is no set process for taking backups but tools like scp can be used to set this up.
+There is no set process for taking backups but tools like `scp` can be used to set this up.
 
 ## Factory Reset
 
