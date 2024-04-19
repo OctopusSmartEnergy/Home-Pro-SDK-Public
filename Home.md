@@ -175,32 +175,17 @@ Octave_GPIO.py contains the class that controls access to the GPIO RESTful API. 
 
 flash-led.py is a simple python script that is called at start up and will be running constantly.
 
-If an LED is placed across pin 5 and ground as shown below it will flash every second. This is a clear
-indication that the docker container is running and SDK is accessible.
+flash-led.py can be used if an LED is placed across pin 5 and ground as shown below it will flash every second.
 For reference, from the 4 pin jumper only 2 wires are needed.
-
-![flash](assets/flash.gif)
-
-To change and re-run the script, make sure to stop the invocation that runs at startup. The PID of this run can be found with
-
-```
-ps -ef | grep flash-led.py
-```
-
-you can then use the `kill` command with this PID. To run the example application again, use
 
 ```
 cd /root/Octave_GPIO
 python3 flash-led.py
 ```
 
-This second/modified run can be stopped using the `Ctrl+C` key combination.
-To stop the script from being run at SDK startup every time, edit the startup.sh file in base root directory. Use nano from a terminal based
-ssh session or ideally the remote file explorer VSCode component for this.
+![flash](assets/flash.gif)
 
-**_Be careful editing the startup script as this also enables ssh connection, if corrupted it could
-render the SDK container inaccessible. See the [Container Startup Script](#container-startup-script)
-section for details before trying to edit._**
+The example script can be stopped using the `Ctrl+C` key combination.
 
 ### Octave_I2C
 
@@ -305,7 +290,7 @@ There is no set process for taking backups but tools like `scp` can be used to s
 
 To perform a factory reset locate the pin hole that is between the USB ports and the white WPS button.
 
-While the board is powered on, press and hold for **more than 10 seconds**. This will remove the SDK container and additionally wipe the wifi configuration so the steps for connecting to the internet will have to be carried out again.
+While the board is powered on, press and hold for **more than 10 seconds**. This will remove the SDK container and **additionally wipe the wifi configuration so the steps for connecting to the internet will have to be carried out again**.
 
 A 'press and hold' for less than 10 seconds will wipe the wifi configuration only.
 
