@@ -128,6 +128,7 @@ Octave_PWM/
 Octave_I2C/
 Octave_GPIO/
 Octave_SPI/
+Octave_Energy/
 ```
 
 The startup.sh is a script that is run at container launch while the Octave_* are directories for APIs of
@@ -276,6 +277,66 @@ python3 scrolling-text.py
 ```
 
 ![TFTDisplay](assets/tft_display.gif)
+
+### Octave_Energy
+
+The Octave_Energy directory provides an example application that accesses the HAN APIs
+provided by the main system. The HAN APIs can be leveraged to gather energy consumption
+data. The example application flashes an LED attached to the Grove HAT's pin 6, if the
+need is to utilize the main Home Pro header please see the [40 Pin Header](#40-pin-header)
+section.
+
+The demo application flashes the LED based on how fast the total consumption increases
+and currently is only validated with electricity meters.
+
+To run the demo successfully, you should have a meter attached to your HOME Pro over the HAN
+and then run the following commands inside the SDK
+```
+cd /root/Octave_Energy
+python3 energy_consumption.py
+```
+
+An example run has the following output
+```
+Calling API: get_meter_consumption
+Current total consumption is 30095.177kWh and the instant demand is 5.238kW
+
+Calling API: get_meter_status
+Ambient energy consumption is: Low
+
+Calling API: get_meter_consumption
+6Current total consumption is 30095.184kWh and the instant demand is 5.247kW
+
+LED blinked!
+
+Calling API: get_meter_status
+Ambient energy consumption is: Low
+
+Calling API: get_meter_consumption
+aCurrent total consumption is 30095.184kWh and the instant demand is 5.247kW
+
+Calling API: get_meter_status
+Ambient energy consumption is: Low
+
+Calling API: get_meter_consumption
+Current total consumption is 30095.184kWh and the instant demand is 5.247kW
+
+Calling API: get_meter_status
+Ambient energy consumption is: Low
+
+Calling API: get_meter_consumption
+Current total consumption is 30095.193kWh and the instant demand is 5.252kW
+
+LED blinked!
+
+Calling API: get_meter_status
+Ambient energy consumption is: Low
+```
+
+Just like the other SDK examples the demo can be stopped using the `Ctrl+C` key combination.
+
+For more information on what's available through the main system's HAN API please have a look
+at [HAN_API.md](HAN_API.md).
 
 ## Container Startup Script
 
