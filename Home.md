@@ -129,6 +129,7 @@ Octave_I2C/
 Octave_GPIO/
 Octave_SPI/
 Octave_Energy/
+Octave_Screen/
 ```
 
 The startup.sh is a script that is run at container launch while the Octave_* are directories for APIs of
@@ -291,12 +292,14 @@ and currently is only validated with electricity meters.
 
 To run the demo successfully, you should have a meter attached to your HOME Pro over the HAN
 and then run the following commands inside the SDK
+
 ```
 cd /root/Octave_Energy
 python3 energy_consumption.py
 ```
 
 An example run has the following output
+
 ```
 Calling API: get_meter_consumption
 Current total consumption is 30095.177kWh and the instant demand is 5.238kW
@@ -337,6 +340,23 @@ Just like the other SDK examples the demo can be stopped using the `Ctrl+C` key 
 
 For more information on what's available through the main system's HAN API please have a look
 at [HAN_API.md](HAN_API.md).
+
+### Octave_Screen
+
+The Octave_Screen folder showcases a demo that is able to change/modify the card/screen allotted
+to the SDK. We encourage you to first go through the [Screen API documentation](Screen_API.md)
+and then explore the demo that is presented here.
+
+Switch between system and application screens using the touch button on the front of your Home Pro
+device. Once on the SDK screen, or otherwise, run the display demo as follows
+
+```
+cd /root/Octave_Screen
+python3 display.py
+```
+
+This should update the SDK screen and show the new message you want to display using the display.py
+example application.
 
 ## Container Startup Script
 
