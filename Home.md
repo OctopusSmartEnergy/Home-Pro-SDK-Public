@@ -364,15 +364,47 @@ A user can edit the startup script (startup.sh) to change what is started at con
 
 _**WARNING: Do not remove the start up of the sshd server else you will not be able to access the SDK on next boot.**_
 
-If this does happen you will need to do a [factory reset](#factory-reset). This will download the original container again so any work you have done will be lost if not backed up earlier.
-There is no set process for taking backups but tools like `scp` can be used to set this up.
+If this does happen you will need to do a [SDK reset](#sdk-reset). This will download the original container again
+so any work you have done will be lost if not backed up using [SDK persistent storage](#sdk-persistent-storage).
 
-## Factory Reset
+There is no set process for taking backups but if you are not using SDK persistent storage, tools like `scp` can
+be used to set this up.
 
-To perform a factory reset locate the pin hole that is between the USB ports and the white WPS button.
+## SDK Persistent Storage
 
-While the board is powered on, press and hold for **more than 10 seconds**. This will remove the SDK container and **additionally wipe the wifi configuration so the steps for connecting to the internet will have to be carried out again**.
+The SDK has a persistent storage area that remains intact across firmware updates, factory
+and SDK resets. This special 190MB storage is mounted inside the SDK at **/data**.
 
-A 'press and hold' for less than 10 seconds will wipe the wifi configuration only.
+```
+root@octave-imx8mn:~# df -h /data
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/loop0      190M  1.6M  175M   1% /data
+root@octave-imx8mn:~# ls -al /data/
+total 17
+drwxr-xr-x 3 root root  1024 May 17 14:23 .
+drwxr-xr-x 1 root root  4096 May 22 14:45 ..
+drwx------ 2 root root 12288 May 17 14:23 lost+found
+```
 
-The SDK docker image will be re-downloaded and started automatically once internet connectivity is established.
+This persistent space can be used for backups or simply hosting important data that is required
+to be preserved across different device functions.
+
+## SDK Reset
+
+To perform a sdk reset, scroll to the reset screen using the round touch button on the
+bottom front of your Home Pro. This screen by default displays **"All Ok"**.
+
+![Touch Button](assets/touch_button.jpeg)
+
+Locate the pin hole that is between the USB ports and the white WPS button, this is the reset button.
+
+![Reset Pin](assets/reset_button.jpeg)
+
+While the board is powered on, **press and hold** the reset button. The screen will cycle
+through different reset options. Once the screen displays **"SDK Reset"**, leave the reset button.
+For the next 30 seconds the reset screen will display "SDK Reset" and **clicking** the reset button
+once within this time will remove the SDK container and image. Please note that the
+[SDK persistent storage](#sdk-persistent-storage) is not wiped out with an SDK reset.
+
+The SDK docker image will be re-downloaded and the SDK container will be started automatically
+once internet connectivity is established.
