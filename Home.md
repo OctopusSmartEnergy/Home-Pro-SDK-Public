@@ -19,6 +19,10 @@
 
 ## Introduction
 
+_**IMPORTANT: This method of using the SDK has been deprecated in favor of the `home_pro_homeassistant_sdk` app
+available on the [Home Pro AppStore](https://app-store.octopushome.net). Please go through the app's readme
+section for information on how to use it. The example applications presented here apply to the app as well.**_
+
 Welcome to the Octopus Home Pro SDK guide. This wiki details the steps and recommendations for developing custom apps on your Home Pro. The Home Pro hosts a 40 pin Raspberry Pi HAT header for connecting Pi compatible sensors and HATs.
 
 ![running](assets/running.png)
